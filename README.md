@@ -9,6 +9,7 @@
 # Connection to Pixhawk
 ### hardware connection
 refer http://www.modulabs.co.kr/board_GDCH80/4986
+
 Using USB to TTL is better i think.
 
 ### run ROS in TK1
