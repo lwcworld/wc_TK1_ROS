@@ -12,6 +12,9 @@ refer http://www.modulabs.co.kr/board_GDCH80/4986
 
 Using USB to TTL is better i think.
 
+and change PX4 parameter SYS_COMPANION at QGroundControl to CompanionLink(921600 8N1)
+ 
+
 ### run ROS in TK1
 1. run roscore
 <pre><code>roscore</code></pre>
@@ -22,3 +25,11 @@ Using USB to TTL is better i think.
 <pre><code>sudo chmod 666 /dev/ttyUSB0</code></pre>
 ##### if you want to see tty list
 <pre><code>dmesg | grep tty</code></pre>
+
+
+# Future work
+hardware setting following reference :
+
+https://dev.px4.io/en/ros/offboard_control.html
+
+try arm/disarm, mode change
