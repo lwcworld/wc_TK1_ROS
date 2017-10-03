@@ -33,16 +33,17 @@ def local_position_callback_1(msg):
 class Data_storage(object):
     def __init__(self, idx_uav):
         if idx_uav == 1:
-            self.arm  = rospy.ServiceProxy('/uav1/mavros/cmd/arming', CommandBool)
-            self.mode = rospy.ServiceProxy('/uav1/mavros/set_mode', SetMode)
-            self.pub_att = rospy.Publisher('/uav1/mavros/setpoint_attitude/attitude', PoseStamped, queue_size=10)
-            self.pub_thr = rospy.Publisher('/uav1/mavros/setpoint_attitude/att_throttle', Float64, queue_size=10)
-            rospy.Subscriber("/uav1/mavros/local_position/pose", PoseStamped, local_position_callback_1)
+            self.arm  = rospy.ServiceProxy('/mavros/cmd/arming', CommandBool)
+            self.mode = rospy.ServiceProxy('/mavros/set_mode', SetMode)
+            self.pub_att = rospy.Publisher('/mavros/setpoint_attitude/attitude', PoseStamped, queue_size=10)
+            self.pub_thr = rospy.Publisher('/mavros/setpoint_attitude/att_throttle', Float64, queue_size=10)
+            rospy.Subscriber("/mavros/local_position/pose", PoseStamped, local_position_callback_1)
             # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback_1)
             # rospy.Subscriber("/uav1/mavros/global_position/local", PoseWithCovarianceStamped, local_position_callback_1)
             self.des_x = 0
             self.des_y = 0
             self.des_z = 0
+
 
         self.roll_cmd = 0
         self.pitch_cmd = 0
