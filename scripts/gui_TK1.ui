@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1324</width>
-    <height>723</height>
+    <width>902</width>
+    <height>502</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,18 +18,200 @@
     <rect>
      <x>20</x>
      <y>10</y>
-     <width>331</width>
-     <height>701</height>
+     <width>851</width>
+     <height>471</height>
     </rect>
    </property>
    <property name="title">
-    <string>UAV1</string>
+    <string>UAV</string>
    </property>
+   <widget class="QGroupBox" name="groupBox_arm">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>101</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>command</string>
+    </property>
+    <widget class="QPushButton" name="pushButton_arm">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>99</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>arm</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_disarm">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>99</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>disarm</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>190</y>
+      <width>231</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>offboard ctrl thread</string>
+    </property>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>111</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>on</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>20</y>
+       <width>111</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>suspend/off</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_8">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>110</y>
+      <width>121</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>waypoint flight</string>
+    </property>
+    <widget class="QPushButton" name="pushButton_11">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>81</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>run</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>110</y>
+      <width>111</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>offboard input</string>
+    </property>
+    <widget class="QPushButton" name="pushButton_9">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>99</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>joystick</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_10">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>99</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>auto</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>151</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>mode</string>
+    </property>
+    <widget class="QRadioButton" name="radioButton_offboard">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>117</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>offboard</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_stabilize">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>117</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>stabilize</string>
+     </property>
+    </widget>
+   </widget>
    <widget class="QGroupBox" name="groupBox_7">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>270</y>
+      <x>20</x>
+      <y>250</y>
       <width>301</width>
       <height>121</height>
      </rect>
@@ -286,342 +468,283 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_2">
+   <widget class="QPushButton" name="pushButton_12">
     <property name="geometry">
      <rect>
       <x>30</x>
       <y>400</y>
-      <width>261</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>RC input</string>
-    </property>
-    <widget class="QSlider" name="verticalSlider_pitch_1">
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>20</y>
-       <width>29</width>
-       <height>91</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-    <widget class="QSlider" name="horizontalSlider_roll_1">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>50</y>
-       <width>101</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-    <widget class="QSlider" name="verticalSlider_throttle_1">
-     <property name="geometry">
-      <rect>
-       <x>190</x>
-       <y>20</y>
-       <width>29</width>
-       <height>91</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-    <widget class="QSlider" name="horizontalSlider_yaw_1">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>50</y>
-       <width>101</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_arm">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>30</y>
-      <width>101</width>
-      <height>80</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>command</string>
-    </property>
-    <widget class="QPushButton" name="pushButton_arm">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>20</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>arm</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_disarm">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>50</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>disarm</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_3">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>190</y>
-      <width>221</width>
-      <height>80</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>offboard ctrl thread</string>
-    </property>
-    <widget class="QPushButton" name="pushButton">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>20</y>
-       <width>111</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>on</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>50</y>
-       <width>111</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>off</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_3">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>20</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>suspend</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_4">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>50</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>resume</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QTableWidget" name="tableWidget">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>520</y>
-      <width>241</width>
-      <height>181</height>
-     </rect>
-    </property>
-    <row>
-     <property name="text">
-      <string>arm</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>mode</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>offboard type</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>offboard thread</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>rc override thread</string>
-     </property>
-    </row>
-    <column>
-     <property name="text">
-      <string>state</string>
-     </property>
-    </column>
-    <item row="1" column="0">
-     <property name="text">
-      <string/>
-     </property>
-    </item>
-    <item row="2" column="0">
-     <property name="text">
-      <string>joystick</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_8">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>110</y>
-      <width>121</width>
+      <width>99</width>
       <height>51</height>
      </rect>
     </property>
-    <property name="title">
-     <string>waypoint flight</string>
+    <property name="text">
+     <string>reset</string>
     </property>
-    <widget class="QPushButton" name="pushButton_11">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>20</y>
-       <width>81</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>run</string>
-     </property>
-    </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_6">
+   <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>110</y>
-      <width>111</width>
-      <height>81</height>
+      <x>620</x>
+      <y>60</y>
+      <width>221</width>
+      <height>281</height>
      </rect>
     </property>
-    <property name="title">
-     <string>offboard input</string>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
-    <widget class="QPushButton" name="pushButton_9">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>20</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>joystick</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_10">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>50</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>auto</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>30</y>
-      <width>151</width>
-      <height>71</height>
-     </rect>
+    <property name="contextMenuPolicy">
+     <enum>Qt::DefaultContextMenu</enum>
     </property>
     <property name="title">
-     <string>mode</string>
+     <string>              Connectivity</string>
     </property>
-    <widget class="QRadioButton" name="radioButton_offboard">
+    <widget class="QTextBrowser" name="textBrowser_3">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>20</y>
-       <width>117</width>
+       <x>70</x>
+       <y>30</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;FCU&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="Line" name="line_2">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>170</y>
+       <width>3</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>5</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QTextBrowser" name="textBrowser">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>120</y>
+       <width>101</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;  companion&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;   computer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QTextBrowser" name="textBrowser_2">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>230</y>
+       <width>41</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;GCS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="Line" name="line">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>60</y>
+       <width>3</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>5</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_Conn_FCU_CC">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>80</y>
+       <width>121</width>
        <height>22</height>
       </rect>
      </property>
      <property name="text">
-      <string>offboard</string>
+      <string>disconnected</string>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
      </property>
     </widget>
-    <widget class="QRadioButton" name="radioButton_stabilize">
+    <widget class="QCheckBox" name="checkBox_Conn_CC_GCS">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>50</y>
-       <width>117</width>
+       <x>80</x>
+       <y>190</y>
+       <width>131</width>
        <height>22</height>
       </rect>
      </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
      <property name="text">
-      <string>stabilize</string>
+      <string>disconnected</string>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
      </property>
     </widget>
    </widget>
   </widget>
-  <widget class="QPushButton" name="pushButton_12">
+  <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>650</y>
-     <width>99</width>
-     <height>51</height>
+     <x>370</x>
+     <y>260</y>
+     <width>261</width>
+     <height>121</height>
     </rect>
    </property>
-   <property name="text">
-    <string>reset</string>
+   <property name="title">
+    <string>RC input</string>
    </property>
+   <widget class="QSlider" name="verticalSlider_pitch_1">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>20</y>
+      <width>29</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QSlider" name="horizontalSlider_roll_1">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>50</y>
+      <width>101</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QSlider" name="verticalSlider_throttle_1">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>20</y>
+      <width>29</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QSlider" name="horizontalSlider_yaw_1">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>101</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>50</y>
+     <width>261</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <row>
+    <property name="text">
+     <string>connection with FCU</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>arm</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>mode</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>offboard thread</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>offboard type</string>
+    </property>
+   </row>
+   <column>
+    <property name="text">
+     <string>state</string>
+    </property>
+   </column>
+   <item row="2" column="0">
+    <property name="text">
+     <string/>
+    </property>
+   </item>
+   <item row="3" column="0">
+    <property name="text">
+     <string>off</string>
+    </property>
+   </item>
+   <item row="4" column="0">
+    <property name="text">
+     <string/>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>
@@ -719,38 +842,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>814</x>
      <y>456</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_3</sender>
-   <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
-   <slot>slot7()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>440</x>
-     <y>249</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>814</x>
-     <y>381</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_4</sender>
-   <signal>clicked()</signal>
-   <receiver>Dialog</receiver>
-   <slot>slot8()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>440</x>
-     <y>279</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>814</x>
-     <y>413</y>
     </hint>
    </hints>
   </connection>

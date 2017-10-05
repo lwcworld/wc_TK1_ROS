@@ -10,7 +10,7 @@ from threading import Thread, Event
 
 # msgs
 from mavros_msgs.srv import CommandBool, SetMode
-from mavros_msgs.msg import OverrideRCIn
+from mavros_msgs.msg import OverrideRCIn, State
 from std_msgs.msg import Float64
 from geometry_msgs.msg import PoseStamped, Quaternion, Pose, PoseWithCovarianceStamped
 from sensor_msgs.msg import NavSatFix
@@ -26,8 +26,19 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsPixmapItem
 
-def local_position_callback_1(msg):
+def local_position_callback(msg):
     agent1.state = msg
+
+def uav_state_callback(msg):
+    agent1.status = msg
+
+    # print(agent1.status)
+    # print("-------------------------------")
+    # print(agent1.status)
+    # print(agent1.status.armed)
+    # print(agent1.status.connected)
+    # print(agent1.status.guided)
+    # print(agent1.status.mode)
 
 # data
 class Data_storage(object):
@@ -37,20 +48,21 @@ class Data_storage(object):
             self.mode = rospy.ServiceProxy('/mavros/set_mode', SetMode)
             self.pub_att = rospy.Publisher('/mavros/setpoint_attitude/attitude', PoseStamped, queue_size=10)
             self.pub_thr = rospy.Publisher('/mavros/setpoint_attitude/att_throttle', Float64, queue_size=10)
-            rospy.Subscriber("/mavros/local_position/pose", PoseStamped, local_position_callback_1)
-            # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback_1)
-            # rospy.Subscriber("/uav1/mavros/global_position/local", PoseWithCovarianceStamped, local_position_callback_1)
+            rospy.Subscriber("/mavros/local_position/pose", PoseStamped, local_position_callback)
+            rospy.Subscriber("/mavros/state", State, uav_state_callback)
+            # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback)
+            # rospy.Subscriber("/uav1/mavros/global_position/local", PoseWithCovarianceStamped, local_position_callback)
             self.des_x = 0
             self.des_y = 0
             self.des_z = 0
-
 
         self.roll_cmd = 0
         self.pitch_cmd = 0
         self.yaw_cmd = 0
         self.throttle_cmd = 0
 
-        self.state = PoseStamped()
+        self.state = PoseStamped() # state of UAV : position related info
+        self.status = State() # status of UAV : flight status info (arm/disarm, mode, etc..)
 
 # define agent (global variable)
 agent1 = Data_storage(idx_uav=1)
@@ -61,10 +73,11 @@ class PX4_GUI(QtWidgets.QDialog):
         self.ui = uic.loadUi("gui_TK1.ui", self)
         self.ui.show()
 
-        self.srv_reset = g_set_state = rospy.ServiceProxy("/gazebo/set_model_state", SetModelState)
+        self.srv_reset = rospy.ServiceProxy("/gazebo/set_model_state", SetModelState)
 
         agent1.OT = Offboard_thread(idx_uav=1)
 
+        self.offboard_thread_chk = 2;
 
         self.slider_roll_1 = self.horizontalSlider_roll_1
         self.slider_pitch_1 = self.verticalSlider_pitch_1
@@ -84,14 +97,17 @@ class PX4_GUI(QtWidgets.QDialog):
         self.text_state_y_1 = self.plainTextEdit_state_y_1
         self.text_state_z_1 = self.plainTextEdit_state_z_1
 
+        self.chkbox_FCU_CC = self.checkBox_Conn_FCU_CC
+        self.chkbox_CC_GCS = self.checkBox_Conn_CC_GCS
+
         self.scene = QGraphicsScene()
 
         self.waypoint_run = 0
 
         # timer for periodic update of GUI
         self.timer = QtCore.QTimer(self)
-        self.timer.setInterval(100)  # Throw event timeout with an interval of 1000 milliseconds
-        self.timer.timeout.connect(self.update_ctrl)  # each time timer counts a second, call self.blink
+        self.timer.setInterval(100)  # Throw event timeout with an interval of 100 milliseconds
+        self.timer.timeout.connect(self.update_gui)  # each time timer counts a second, call self.blink
         self.color_flag = True
 
         self.timer_start()
@@ -102,7 +118,7 @@ class PX4_GUI(QtWidgets.QDialog):
     def timer_stop(self):
         self.timer.stop()
 
-    def update_ctrl(self):
+    def update_gui(self):
         t = rospy.get_time()
 
         self.slider_roll_1.setValue(agent1.roll_cmd*100+50)
@@ -118,6 +134,31 @@ class PX4_GUI(QtWidgets.QDialog):
         self.text_state_y_1.setPlainText(str("{0:.2f}".format(agent1.state.pose.position.y)))
         self.text_state_z_1.setPlainText(str("{0:.2f}".format(agent1.state.pose.position.z)))
 
+        if agent1.status.connected == True:
+            self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("connected"))
+            self.chkbox_FCU_CC.setCheckState(True)
+            self.chkbox_FCU_CC.setText("connected")
+        else:
+            self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("disconnected"))
+            self.chkbox_FCU_CC.setCheckState(False)
+            self.chkbox_FCU_CC.setText("disconnected")
+
+        if agent1.status.armed == True:
+            self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("armed"))
+        else:
+            self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("disarmed"))
+
+        self.tableWidget.setItem(2, 0, QtWidgets.QTableWidgetItem(agent1.status.mode))
+
+        if self.offboard_thread_chk == 1:
+            self.tableWidget.setItem(3, 0, QtWidgets.QTableWidgetItem("on"))
+        elif self.offboard_thread_chk == 2:
+            self.tableWidget.setItem(3, 0, QtWidgets.QTableWidgetItem("off"))
+        elif self.offboard_thread_chk == 3:
+            self.tableWidget.setItem(3, 0, QtWidgets.QTableWidgetItem("suspend"))
+        elif self.offboard_thread_chk == 4:
+            self.tableWidget.setItem(3, 0, QtWidgets.QTableWidgetItem("on"))
+
         pixmap = QtGui.QPixmap()
         pixmap.load('catkin_ws/src/wc_gazebo/scripts/camera_image.jpeg')
         item = QGraphicsPixmapItem(pixmap)
@@ -126,58 +167,66 @@ class PX4_GUI(QtWidgets.QDialog):
     # UAV_1
     @pyqtSlot()
     def slot1(self):  # pushButton_arm
-        self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("armed"))
+        # self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("armed"))
         agent1.arm(True)
 
     @pyqtSlot()
     def slot2(self): # pushButton_disarm
-        self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("disarmed"))
+        # self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("disarmed"))
         agent1.arm(False)
 
     @pyqtSlot()
     def slot3(self): # click offboard radio button
         # !! should check there is periodic ctrl command
         check = agent1.mode(custom_mode="OFFBOARD")
-        if check.success == True:
-            self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("offboard"))
+        # if check.success == True:
+        #     self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("offboard"))
 
     @pyqtSlot()
     def slot4(self): # click stabilize radio button
         # check = self.mode(custom_mode="STABILIZED")
         check = agent1.mode(custom_mode='MANUAL')
 
-        if check.success == True:
-            self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("stabilize"))
+        # if check.success == True:
+        #     self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("stabilize"))
 
     @pyqtSlot() ##
     def slot5(self): # click offboard thread on
-        self.tableWidget.setItem(3, 0, QtWidgets.QTableWidgetItem("on"))
-        agent1.OT.start()
+        if self.offboard_thread_chk == 3:
+            agent1.OT.myResume()
+            self.offboard_thread_chk = 1
+        elif self.offboard_thread_chk == 2:
+            agent1.OT.start()
+            self.offboard_thread_chk = 1
 
     @pyqtSlot() ##
     def slot6(self):  # click offboard thread off
-        self.tableWidget.setItem(3, 0, QtWidgets.QTableWidgetItem("off"))
-        agent1.OT.myExit()
+        if self.offboard_thread_chk == 1:
+            agent1.OT.mySuspend()
+            self.offboard_thread_chk = 3
+        else:
+            agent1.OT.myExit()
+            agent1.OT = Offboard_thread(idx_uav=1)
+            self.offboard_thread_chk = 2
 
-    @pyqtSlot() ##
-    def slot7(self):  # click offboard thread suspend
-        self.tableWidget.setItem(3, 0, QtWidgets.QTableWidgetItem("suspend"))
-        agent1.OT.mySuspend()
-
-    @pyqtSlot() ##
-    def slot8(self):  # click offboard thread resume
-        self.tableWidget.setItem(3, 0, QtWidgets.QTableWidgetItem("on"))
-        # OT = Offboard_thread()
-        agent1.OT.myResume()
+    # @pyqtSlot() ##
+    # def slot7(self):  # click offboard thread suspend
+    #     self.offboard_thread_chk = 3;
+    #     # agent1.OT.mySuspend()
+    #
+    # @pyqtSlot() ##
+    # def slot8(self):  # click offboard thread resume
+    #     self.offboard_thread_chk = 1;
+    #     # agent1.OT.myResume()
 
     @pyqtSlot()
     def slot13(self): # click offboard input as joystick
-        self.tableWidget.setItem(2, 0, QtWidgets.QTableWidgetItem("joystick"))
+        self.tableWidget.setItem(4, 0, QtWidgets.QTableWidgetItem("joystick"))
         self.ctrl_type = 'joystick'
 
     @pyqtSlot()
     def slot14(self): # click offboard input as autonomous
-        self.tableWidget.setItem(2, 0, QtWidgets.QTableWidgetItem("auto"))
+        self.tableWidget.setItem(4, 0, QtWidgets.QTableWidgetItem("auto"))
         self.ctrl_type = 'auto'
         print(self.tableWidget.item(2,0).text())
         print(self.tableWidget.item(2,0).text() == 'ff')
@@ -362,11 +411,8 @@ class Offboard_thread(Thread):
     def myExit(self):
         self.__exit = True
 
-
 class setpoint_att(object):
     def __init__(self):
-        # self.pub_att = rospy.Publisher('/uav3/mavros/setpoint_attitude/attitude', PoseStamped, queue_size=10)
-        # self.pub_thr = rospy.Publisher('/uav3/mavros/setpoint_attitude/att_throttle', Float64, queue_size=10)
         self.cmd_att = PoseStamped()
         self.cmd_thr = Float64()
 
@@ -440,18 +486,12 @@ class setpoint_att(object):
         self.cmd_att.header.stamp.secs = rospy.get_time()
         t_now = self.cmd_att.header.stamp.secs
 
-
-
         dt = t_now - t_prev
         if dt == 0 :
             dt =0.05
 
         if idx_uav == 1:
             agent = agent1
-        elif idx_uav == 2:
-            agent = agent2
-        elif idx_uav == 3:
-            agent = agent3
 
         self.des_x = agent.des_x  #
         self.des_y = agent.des_y  #
