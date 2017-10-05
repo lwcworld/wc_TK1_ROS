@@ -14,9 +14,9 @@ and change PX4 parameter SYS_COMPANION at QGroundControl to CompanionLink(921600
 2. run Mavros
 <pre><code>rosrun mavros mavros_node _fcu_url:="/dev/ttyUSB0:921600"</code></pre>
 
-####### if there is permission problem
+###### if there is permission problem
 <pre><code>sudo chmod 666 /dev/ttyUSB0</code></pre>
-####### if you want to see tty list
+###### if you want to see tty list
 <pre><code>dmesg | grep tty</code></pre>
 
 ###  pixhawk <-> Companion Computer <-> GCS(Linux computer)  Connection
