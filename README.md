@@ -34,6 +34,17 @@ in companion computer
 <pre><code>roslaunch mavros px4.launch fcu_url:=/dev/ttyUSB0:921600 gcs_url:=udp://@127.0.0.1:14550</code></pre>
 here, gcs_url should be a address of GCS(with ros)
 
+# SITL
+### term 1
+<pre><code>roscore</code></pre>
+### term 2
+<pre><code>cd catkin_ws/src/Firmware</code></pre>
+<pre><code>no_sim=1 make posix_sitl_default gazebo</code></pre>
+### term 3
+<pre><code>roslaunch gazebo_ros empty_world.launch</code></pre>
+### term 4
+<pre><code>roslaunch wc_TK1_ROS quad_sitl.launch</code></pre>
+
 # Future work
 hardware setting following reference :
 

@@ -575,7 +575,6 @@ class setpoint_att(object):
         return (self.cmd_att, self.cmd_thr)
 
     def talk(self, idx_uav):
-        # print(self.theta)
         self.cmd_att.pose.position.z = 10.0
         if idx_uav == 1:
             agent1.pub_att.publish(self.cmd_att)
