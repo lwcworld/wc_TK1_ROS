@@ -33,18 +33,19 @@ here, gcs_url should be a address of GCS(with ros)
 <pre><code>roscore</code></pre>
 ##### term 2
 <pre><code>cd catkin_ws/src/Firmware</code></pre>
+<pre><code>source Tools/setup_gazebo.bash $(pwd) $(pwd)/build_posix_sitl_default</code></pre>
 <pre><code>no_sim=1 make posix_sitl_default gazebo</code></pre>
 ##### term 3
+<pre><code>source Tools/setup_gazebo.bash $(pwd) $(pwd)/build_posix_sitl_default</code></pre>
 <pre><code>roslaunch gazebo_ros empty_world.launch</code></pre>
 ##### term 4
 <pre><code>roslaunch wc_TK1_ROS quad_sitl.launch</code></pre>
 
 # Future work
-hardware setting following reference :
-
-https://dev.px4.io/en/ros/offboard_control.html
-
-try arm/disarm, mode change
+##### FCU-Companion-GCS hardware connection test
+hardware test : https://dev.px4.io/en/ros/offboard_control.html
+##### flight test
+##### opencv implementation
 
 # github upload
 1. <pre><code>git add *</code></pre>
