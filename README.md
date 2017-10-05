@@ -39,14 +39,14 @@ here, gcs_url should be a address of GCS(with ros)
 ##### term 4
 <pre><code>roslaunch wc_TK1_ROS quad_sitl.launch</code></pre>
 
-### Future work
+# Future work
 hardware setting following reference :
 
 https://dev.px4.io/en/ros/offboard_control.html
 
 try arm/disarm, mode change
 
-### github upload
+# github upload
 1. <pre><code>git add *</code></pre>
 2. <pre><code>git commit -m "comments"</code></pre>
 3. <pre><code>git push origin master</code></pre>
