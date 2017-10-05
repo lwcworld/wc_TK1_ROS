@@ -1,31 +1,25 @@
-## TK1 ROS code ##
 
-# github upload
-1. <pre><code>git add *</code></pre>
-2. <pre><code>git commit -m "comments"</code></pre>
-3. <pre><code>git push origin master</code></pre>
-
-
-# Pixhawk <-> Companion Computer Connection
-### hardware connection
+# HARDWARE
+### Pixhawk <-> Companion Computer Connection
+##### hardware connection
 refer http://www.modulabs.co.kr/board_GDCH80/4986
 
 Using USB to TTL is better i think.
 
 and change PX4 parameter SYS_COMPANION at QGroundControl to CompanionLink(921600 8N1)
 
-### run ROS in TK1
+##### run ROS in TK1
 1. run roscore
 <pre><code>roscore</code></pre>
 2. run Mavros
 <pre><code>rosrun mavros mavros_node _fcu_url:="/dev/ttyUSB0:921600"</code></pre>
 
-##### if there is permission problem
+####### if there is permission problem
 <pre><code>sudo chmod 666 /dev/ttyUSB0</code></pre>
-##### if you want to see tty list
+####### if you want to see tty list
 <pre><code>dmesg | grep tty</code></pre>
 
-#  pixhawk <-> Companion Computer <-> GCS(Linux computer)  Connection
+###  pixhawk <-> Companion Computer <-> GCS(Linux computer)  Connection
 refer http://discuss.px4.io/t/feeding-mavros-using-px4-into-qgc/3499
 
 in companion computer
@@ -35,19 +29,24 @@ in companion computer
 here, gcs_url should be a address of GCS(with ros)
 
 # SITL
-### term 1
+##### term 1
 <pre><code>roscore</code></pre>
-### term 2
+##### term 2
 <pre><code>cd catkin_ws/src/Firmware</code></pre>
 <pre><code>no_sim=1 make posix_sitl_default gazebo</code></pre>
-### term 3
+##### term 3
 <pre><code>roslaunch gazebo_ros empty_world.launch</code></pre>
-### term 4
+##### term 4
 <pre><code>roslaunch wc_TK1_ROS quad_sitl.launch</code></pre>
 
-# Future work
+### Future work
 hardware setting following reference :
 
 https://dev.px4.io/en/ros/offboard_control.html
 
 try arm/disarm, mode change
+
+### github upload
+1. <pre><code>git add *</code></pre>
+2. <pre><code>git commit -m "comments"</code></pre>
+3. <pre><code>git push origin master</code></pre>
