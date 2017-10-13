@@ -26,19 +26,32 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsPixmapItem
 
+# image
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
+from cv2 import namedWindow, cvtColor, imshow
+from cv2 import destroyAllWindows, startWindowThread
+from cv2 import COLOR_BGR2GRAY
+from cv2 import blur, Canny
+
+bridge = CvBridge()
+
 def local_position_callback(msg):
     agent1.state = msg
 
 def uav_state_callback(msg):
     agent1.status = msg
 
-    # print(agent1.status)
-    # print("-------------------------------")
-    # print(agent1.status)
-    # print(agent1.status.armed)
-    # print(agent1.status.connected)
-    # print(agent1.status.guided)
-    # print(agent1.status.mode)
+def camera_callback(msg):
+    cv_image = bridge.imgmsg_to_cv2(msg, "bgr8")
+
+    gray_img = cvtColor(cv_image, COLOR_BGR2GRAY)
+
+    img2 = blur(gray_img, (3, 3))
+    imshow("blur", img2)
+    img3 = Canny(gray_img, 10, 200)
+    imshow("canny", img3)
+    imshow("Image window", gray_img)
 
 # data
 class Data_storage(object):
@@ -52,6 +65,8 @@ class Data_storage(object):
             rospy.Subscriber("/mavros/state", State, uav_state_callback)
             # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback)
             # rospy.Subscriber("/uav1/mavros/global_position/local", PoseWithCovarianceStamped, local_position_callback)
+            rospy.Subscriber("usb_cam/image_raw", Image, camera_callback)
+
             self.des_x = 0
             self.des_y = 0
             self.des_z = 0
