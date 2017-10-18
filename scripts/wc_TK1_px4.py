@@ -49,9 +49,9 @@ def camera_callback(msg):
 
     img2 = blur(gray_img, (3, 3))
     imshow("blur", img2)
-    img3 = Canny(gray_img, 10, 200)
-    imshow("canny", img3)
-    imshow("Image window", gray_img)
+    # img3 = Canny(gray_img, 10, 200)
+    # imshow("canny", img3)
+    # imshow("Image window", gray_img)
 
 # data
 class Data_storage(object):

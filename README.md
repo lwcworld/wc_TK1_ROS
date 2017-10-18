@@ -1,3 +1,9 @@
+# installed development environment
+- ROS
+- ROS catkin workspace
+- MAVROS
+- opencv
+- PX4 Firmware (optional. for SITL)
 
 # HARDWARE
 ### Pixhawk <-> Companion Computer Connection
