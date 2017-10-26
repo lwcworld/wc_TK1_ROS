@@ -32,7 +32,11 @@ from cv_bridge import CvBridge
 from cv2 import namedWindow, cvtColor, imshow
 from cv2 import destroyAllWindows, startWindowThread
 from cv2 import COLOR_BGR2GRAY
-from cv2 import blur, Canny
+from cv2 import blur, Canny, imwrite
+import cv2
+
+# darknet
+import darknet
 
 bridge = CvBridge()
 
@@ -45,10 +49,28 @@ def uav_state_callback(msg):
 def camera_callback(msg):
     cv_image = bridge.imgmsg_to_cv2(msg, "bgr8")
 
-    gray_img = cvtColor(cv_image, COLOR_BGR2GRAY)
+    imwrite('cam_img.jpg', cv_image)
+    r = darknet.detect(agent1.net, agent1.meta, "cam_img.jpg")
+    # cv2.rectangle(cv_image, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
-    img2 = blur(gray_img, (3, 3))
-    imshow("blur", img2)
+    if not r:
+        pass
+    else:
+        for i_obj in range(len(r)):
+            x = r[i_obj][2][0]
+            y = r[i_obj][2][1]
+            width = r[i_obj][2][2]
+            heigt = r[i_obj][2][3]
+            cv2.rectangle(cv_image, (int(x-width/2), int(y-heigt/2)), (int(x+width/2), int(y+heigt/2)), (255, 0, 0), 2)
+            cv2.putText(cv_image, r[i_obj][0], (int(x-width/2), int(y-heigt/2)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
+    imshow("blur", cv_image)
+
+    # print r
+
+    # gray_img = cvtColor(cv_image, COLOR_BGR2GRAY)
+    #
+    # img2 = blur(gray_img, (3, 3))
+    # imshow("blur", img2)
     # img3 = Canny(gray_img, 10, 200)
     # imshow("canny", img3)
     # imshow("Image window", gray_img)
@@ -65,7 +87,11 @@ class Data_storage(object):
             rospy.Subscriber("/mavros/state", State, uav_state_callback)
             # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback)
             # rospy.Subscriber("/uav1/mavros/global_position/local", PoseWithCovarianceStamped, local_position_callback)
-            rospy.Subscriber("usb_cam/image_raw", Image, camera_callback)
+            # rospy.Subscriber("usb_cam/image_raw", Image, camera_callback)
+
+            self.net = darknet.load_net("/home/lwc/darknet/cfg/yolo.cfg", "/home/lwc/darknet/yolo.weights", 0)
+            self.meta = darknet.load_meta("/home/lwc/darknet/cfg/coco.data")
+
 
             self.des_x = 0
             self.des_y = 0
@@ -89,6 +115,7 @@ class PX4_GUI(QtWidgets.QDialog):
         self.ui.show()
 
         self.srv_reset = rospy.ServiceProxy("/gazebo/set_model_state", SetModelState)
+        rospy.Subscriber("/iris/image_raw", Image, camera_callback)
 
         agent1.OT = Offboard_thread(idx_uav=1)
 
@@ -102,7 +129,6 @@ class PX4_GUI(QtWidgets.QDialog):
         self.slider_des_x_1 = self.horizontalSlider_des_x_1
         self.slider_des_y_1 = self.horizontalSlider_des_y_1
         self.slider_des_z_1 = self.horizontalSlider_des_z_1
-
 
         self.text_des_x_1 = self.plainTextEdit_des_x_1
         self.text_des_y_1 = self.plainTextEdit_des_y_1
@@ -594,8 +620,6 @@ class setpoint_att(object):
         if idx_uav == 1:
             agent1.pub_att.publish(self.cmd_att)
             agent1.pub_thr.publish(self.cmd_thr)
-
-        # rospy.loginfo("[cmd req] att : %s, %s, %s, %s", self.roll, self.pitch, self.yaw, self.throttle)
 
 if __name__ == '__main__':
     rospy.init_node('wc_TK1_node')
