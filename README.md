@@ -35,6 +35,7 @@ in companion computer
 here, gcs_url should be a address of GCS(with ros)
 
 # SITL
+### Option 1
 ##### term 1
 <pre><code>roscore</code></pre>
 ##### term 2
@@ -46,6 +47,17 @@ here, gcs_url should be a address of GCS(with ros)
 <pre><code>roslaunch gazebo_ros empty_world.launch</code></pre>
 ##### term 4
 <pre><code>roslaunch wc_TK1_ROS quad_sitl.launch</code></pre>
+
+### Option 2
+##### term 1
+<pre><code>roscore</code></pre>
+##### term 2
+<pre><code>cd catkin_ws/src/Firmware</code></pre>
+<pre><code>source Tools/setup_gazebo.bash $(pwd) $(pwd)/build_posix_sitl_default
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)/Tools/sitl_gazebo
+</code></pre>
+<pre><code>roslaunch px4 wc_multi_uav_mavros_sitl_1quad.launch</code></pre>
 
 # Future work
 ##### FCU-Companion-GCS hardware connection test

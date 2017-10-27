@@ -10,7 +10,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/scripts$wc_TK1_px4.coverage" NAME="wc_TK1_px4 Coverage Results" MODIFIED="1508994007137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/scripts$wc_TK1_px4.coverage" NAME="wc_TK1_px4 Coverage Results" MODIFIED="1509049778160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/scripts$wc_ctrl_quad.coverage" NAME="wc_ctrl_quad Coverage Results" MODIFIED="1506663540590" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
@@ -18,8 +18,8 @@
       <file leaf-file-name="wc_TK1_px4.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wc_TK1_px4.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2287">
-              <caret line="617" column="28" lean-forward="false" selection-start-line="617" selection-start-column="27" selection-end-line="617" selection-end-column="28" />
+            <state relative-caret-position="900">
+              <caret line="93" column="30" lean-forward="false" selection-start-line="93" selection-start-column="30" selection-end-line="93" selection-end-column="30" />
               <folding>
                 <element signature="e#22#40#0" expanded="true" />
               </folding>
@@ -30,8 +30,8 @@
       <file leaf-file-name="darknet.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/darknet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2250">
-              <caret line="125" column="11" lean-forward="true" selection-start-line="125" selection-start-column="11" selection-end-line="125" selection-end-column="11" />
+            <state relative-caret-position="2214">
+              <caret line="125" column="11" lean-forward="false" selection-start-line="125" selection-start-column="11" selection-end-line="125" selection-end-column="11" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -60,7 +60,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>des_</find>
       <find>srv_</find>
       <find>ui</find>
       <find>slot19</find>
@@ -90,6 +89,7 @@
       <find>a</find>
       <find>for</find>
       <find>thres</find>
+      <find>imshow</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -97,8 +97,8 @@
       <list>
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/wc_ctrl_quad.py" />
-        <option value="$PROJECT_DIR$/wc_TK1_px4.py" />
         <option value="$PROJECT_DIR$/darknet.py" />
+        <option value="$PROJECT_DIR$/wc_TK1_px4.py" />
       </list>
     </option>
   </component>
@@ -146,7 +146,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../wc_gazebo_multiple_quad/scripts/wc_ctrl_5quad_formation_ctrl.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../wc_gazebo_multiple_quad/scripts" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -506,7 +506,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -544,7 +543,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
           <caret line="1053" column="26" lean-forward="true" selection-start-line="1053" selection-start-column="26" selection-end-line="1053" selection-end-column="26" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/darknet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2214">
+          <caret line="125" column="11" lean-forward="false" selection-start-line="125" selection-start-column="11" selection-end-line="125" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -556,20 +564,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/darknet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2250">
-          <caret line="125" column="11" lean-forward="true" selection-start-line="125" selection-start-column="11" selection-end-line="125" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wc_TK1_px4.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2287">
-          <caret line="617" column="28" lean-forward="false" selection-start-line="617" selection-start-column="27" selection-end-line="617" selection-end-column="28" />
+        <state relative-caret-position="900">
+          <caret line="93" column="30" lean-forward="false" selection-start-line="93" selection-start-column="30" selection-end-line="93" selection-end-column="30" />
           <folding>
             <element signature="e#22#40#0" expanded="true" />
           </folding>

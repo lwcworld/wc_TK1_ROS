@@ -53,6 +53,7 @@ def camera_callback(msg):
     r = darknet.detect(agent1.net, agent1.meta, "cam_img.jpg")
     # cv2.rectangle(cv_image, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
+    print(1)
     if not r:
         pass
     else:
@@ -63,7 +64,7 @@ def camera_callback(msg):
             heigt = r[i_obj][2][3]
             cv2.rectangle(cv_image, (int(x-width/2), int(y-heigt/2)), (int(x+width/2), int(y+heigt/2)), (255, 0, 0), 2)
             cv2.putText(cv_image, r[i_obj][0], (int(x-width/2), int(y-heigt/2)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
-    imshow("blur", cv_image)
+    imshow("view", cv_image)
 
     # print r
 
@@ -87,6 +88,7 @@ class Data_storage(object):
             rospy.Subscriber("/mavros/state", State, uav_state_callback)
             # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback)
             # rospy.Subscriber("/uav1/mavros/global_position/local", PoseWithCovarianceStamped, local_position_callback)
+
             # rospy.Subscriber("usb_cam/image_raw", Image, camera_callback)
 
             self.net = darknet.load_net("/home/lwc/darknet/cfg/yolo.cfg", "/home/lwc/darknet/yolo.weights", 0)
@@ -115,7 +117,7 @@ class PX4_GUI(QtWidgets.QDialog):
         self.ui.show()
 
         self.srv_reset = rospy.ServiceProxy("/gazebo/set_model_state", SetModelState)
-        rospy.Subscriber("/iris/image_raw", Image, camera_callback)
+        rospy.Subscriber("/iris_cam/image_raw", Image, camera_callback)
 
         agent1.OT = Offboard_thread(idx_uav=1)
 
