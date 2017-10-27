@@ -58,6 +58,7 @@ export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:$(pwd)/Tools/sitl_gazebo
 </code></pre>
 <pre><code>roslaunch px4 wc_multi_uav_mavros_sitl_1quad.launch</code></pre>
+<pre><code>roslaunch px4 wc_single_uav_withcam_mavros_sitl.launch</code></pre>
 
 # Future work
 ##### FCU-Companion-GCS hardware connection test
