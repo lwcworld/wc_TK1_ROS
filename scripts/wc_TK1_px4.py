@@ -53,7 +53,6 @@ def camera_callback(msg):
     r = darknet.detect(agent1.net, agent1.meta, "cam_img.jpg")
     # cv2.rectangle(cv_image, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
-    print(1)
     if not r:
         pass
     else:
@@ -66,8 +65,8 @@ def camera_callback(msg):
             cv2.putText(cv_image, r[i_obj][0], (int(x-width/2), int(y-heigt/2)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
     imshow("view", cv_image)
 
+# def
     # print r
-
     # gray_img = cvtColor(cv_image, COLOR_BGR2GRAY)
     #
     # img2 = blur(gray_img, (3, 3))
@@ -82,8 +81,8 @@ class Data_storage(object):
         if idx_uav == 1:
             self.arm  = rospy.ServiceProxy('/mavros/cmd/arming', CommandBool)
             self.mode = rospy.ServiceProxy('/mavros/set_mode', SetMode)
-            self.pub_att = rospy.Publisher('/mavros/setpoint_attitude/attitude', PoseStamped, queue_size=10)
-            self.pub_thr = rospy.Publisher('/mavros/setpoint_attitude/att_throttle', Float64, queue_size=10)
+            self.pub_att = rospy.Publisher('/mavros/setpoint_attitude/attitude', PoseStamped, queue_size=100)
+            self.pub_thr = rospy.Publisher('/mavros/setpoint_attitude/att_throttle', Float64, queue_size=100)
             rospy.Subscriber("/mavros/local_position/pose", PoseStamped, local_position_callback)
             rospy.Subscriber("/mavros/state", State, uav_state_callback)
             # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback)
@@ -190,7 +189,6 @@ class PX4_GUI(QtWidgets.QDialog):
             self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("armed"))
         else:
             self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("disarmed"))
-
         self.tableWidget.setItem(2, 0, QtWidgets.QTableWidgetItem(agent1.status.mode))
 
         if self.offboard_thread_chk == 1:
@@ -221,15 +219,16 @@ class PX4_GUI(QtWidgets.QDialog):
     @pyqtSlot()
     def slot3(self): # click offboard radio button
         # !! should check there is periodic ctrl command
-        check = agent1.mode(custom_mode="OFFBOARD")
+        print(1)
+        check = agent1.mode(custom_mode = "OFFBOARD")
+        print(check)
         # if check.success == True:
         #     self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("offboard"))
 
     @pyqtSlot()
     def slot4(self): # click stabilize radio button
         # check = self.mode(custom_mode="STABILIZED")
-        check = agent1.mode(custom_mode='MANUAL')
-
+        agent1.mode(custom_mode='MANUAL')
         # if check.success == True:
         #     self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("stabilize"))
 
@@ -359,7 +358,7 @@ class traj_gen():
         for i in range(n_p):
             A[idx_row, 8 * i:8 * (i + 1)] = [1, 0, 0, 0, 0, 0, 0, 0]
             A[idx_row + 1, 8 * i:8 * (i + 1)] = [1, 1, 1, 1, 1, 1, 1, 1]
-            # print(wp)
+
             b[idx_row, 0] = wp[0, i]
             b[idx_row + 1, 0] = wp[0, i + 1]
             idx_row = idx_row + 2
@@ -433,6 +432,7 @@ class Offboard_thread(Thread):
                 # elif self.tableWidget.item(2,0).text() == 'joystick':
 
                 # self.ctrl.calc_cmd_att_thr_joy()
+
                 self.ctrl.calc_cmd_att_thr_auto(self.idx_uav)
                 self.ctrl.talk(self.idx_uav)
 
@@ -620,6 +620,7 @@ class setpoint_att(object):
     def talk(self, idx_uav):
         self.cmd_att.pose.position.z = 10.0
         if idx_uav == 1:
+            print(1)
             agent1.pub_att.publish(self.cmd_att)
             agent1.pub_thr.publish(self.cmd_thr)
 
