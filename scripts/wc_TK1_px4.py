@@ -36,7 +36,7 @@ from cv2 import blur, Canny, imwrite
 import cv2
 
 # darknet
-import darknet
+# import darknet
 
 bridge = CvBridge()
 
@@ -65,16 +65,6 @@ def camera_callback(msg):
             cv2.putText(cv_image, r[i_obj][0], (int(x-width/2), int(y-heigt/2)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
     imshow("view", cv_image)
 
-# def
-    # print r
-    # gray_img = cvtColor(cv_image, COLOR_BGR2GRAY)
-    #
-    # img2 = blur(gray_img, (3, 3))
-    # imshow("blur", img2)
-    # img3 = Canny(gray_img, 10, 200)
-    # imshow("canny", img3)
-    # imshow("Image window", gray_img)
-
 # data
 class Data_storage(object):
     def __init__(self, idx_uav):
@@ -90,8 +80,8 @@ class Data_storage(object):
 
             # rospy.Subscriber("usb_cam/image_raw", Image, camera_callback)
 
-            self.net = darknet.load_net("/home/lwc/darknet/cfg/yolo.cfg", "/home/lwc/darknet/yolo.weights", 0)
-            self.meta = darknet.load_meta("/home/lwc/darknet/cfg/coco.data")
+            # self.net = darknet.load_net("/home/lwc/darknet/cfg/yolo.cfg", "/home/lwc/darknet/yolo.weights", 0)
+            # self.meta = darknet.load_meta("/home/lwc/darknet/cfg/coco.data")
 
 
             self.des_x = 0
