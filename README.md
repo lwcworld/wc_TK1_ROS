@@ -4,6 +4,17 @@
 - MAVROS
 - opencv
 - PX4 Firmware (optional. for SITL)
+The stable PX4 version is v.1.8.0 : 
+<pre><code>git clone --branch DQRC12B https://github.com/PX4/Firmware.git </code></pre>
+for multiple quadrotor simulation, 
+<pre><code>roslaunch px4 multi_uav_mavros_sitl.launch </code></pre>
+if there is error using multiple quadrotors,
+- open the single_vehcile_spawn.launch launch file
+- Replace this line
+<pre><code><arg name="cmd" default="$(find xacro)/xacro.py $(find px4)/Tools/sitl_gazebo/models/rotors_description/urdf/$(arg vehicle)_base.xacro rotors_description_dir:=$(find px4)/Tools/sitl_gazebo/models/rotors_description mavlink_udp_port:=$(arg mavlink_udp_port) > $(arg vehicle)_$(arg ID).urdf ; 'gz sdf -p $(arg vehicle)_$(arg ID).urdf'" /></code></pre>
+by
+<pre><code><arg name="cmd" default="$(find xacro)/xacro.py $(find px4)/Tools/sitl_gazebo/models/rotors_description/urdf/$(arg vehicle)_base.xacro rotors_description_dir:=$(find px4)/Tools/sitl_gazebo/models/rotors_description mavlink_udp_port:=$(arg mavlink_udp_port)" /></code></pre>
+
 
 # HARDWARE
 ### Pixhawk <-> Companion Computer Connection

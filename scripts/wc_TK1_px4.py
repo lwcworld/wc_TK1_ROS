@@ -69,15 +69,15 @@ def camera_callback(msg):
 class Data_storage(object):
     def __init__(self, idx_uav):
         if idx_uav == 1:
-            self.arm  = rospy.ServiceProxy('/mavros/cmd/arming', CommandBool)
-            self.mode = rospy.ServiceProxy('/mavros/set_mode', SetMode)
+            self.arm  = rospy.ServiceProxy('/uav1/mavros/cmd/arming', CommandBool)
+            self.mode = rospy.ServiceProxy('/uav1/mavros/set_mode', SetMode)
 
-            self.pub_rawtargetatt = rospy.Publisher('/mavros/setpoint_raw/attitude', AttitudeTarget, queue_size=100)
+            self.pub_rawtargetatt = rospy.Publisher('/uav1/mavros/setpoint_raw/attitude', AttitudeTarget, queue_size=100)
             # self.pub_att = rospy.Publisher('/mavros/setpoint_attitude/attitude', PoseStamped, queue_size=100)
             # self.pub_att2 = rospy.Publisher('/mavros/setpoint_attitude/target_attitude', PoseStamped, queue_size=100)
             # self.pub_thr = rospy.Publisher('/mavros/setpoint_attitude/thrust', Thrust, queue_size=100)
-            rospy.Subscriber("/mavros/local_position/pose", PoseStamped, local_position_callback)
-            rospy.Subscriber("/mavros/state", State, uav_state_callback)
+            rospy.Subscriber("/uav1/mavros/local_position/pose", PoseStamped, local_position_callback)
+            rospy.Subscriber("/uav1/mavros/state", State, uav_state_callback)
 
 
             # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback)
