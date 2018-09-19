@@ -10,10 +10,11 @@ from threading import Thread, Event
 
 # msgs
 from mavros_msgs.srv import CommandBool, SetMode
-from mavros_msgs.msg import OverrideRCIn, State, Thrust, AttitudeTarget
+from mavros_msgs.msg import OverrideRCIn, State, Thrust, AttitudeTarget, ActuatorControl
 from std_msgs.msg import Float64
+from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseStamped, Quaternion, Pose, PoseWithCovarianceStamped
-from sensor_msgs.msg import NavSatFix
+from sensor_msgs.msg import NavSatFix, Imu
 from gazebo_msgs.srv import SetModelState
 from gazebo_msgs.msg import ModelState
 
@@ -35,16 +36,21 @@ from cv2 import COLOR_BGR2GRAY
 from cv2 import blur, Canny, imwrite
 import cv2
 
+# import my classes
+from class_callback_func import *
+from coordinate_transform import *
+from own_publisher import *
+
 # darknet
 # import darknet
 
 bridge = CvBridge()
 
-def local_position_callback(msg):
-    agent1.state = msg
-
-def uav_state_callback(msg):
-    agent1.status = msg
+# def local_position_callback(msg, agent):
+#     agent.state = msg
+#
+# def uav_state_callback(msg, agent):
+#     agent.status = msg
 
 def camera_callback(msg):
     cv_image = bridge.imgmsg_to_cv2(msg, "bgr8")
@@ -68,36 +74,28 @@ def camera_callback(msg):
 # data
 class Data_storage(object):
     def __init__(self, idx_uav):
-        if idx_uav == 1:
-            self.arm  = rospy.ServiceProxy('/uav1/mavros/cmd/arming', CommandBool)
-            self.mode = rospy.ServiceProxy('/uav1/mavros/set_mode', SetMode)
+        # if idx_uav == 1:
+        self.arm  = rospy.ServiceProxy('/mavros/cmd/arming', CommandBool)
+        self.mode = rospy.ServiceProxy('/mavros/set_mode', SetMode)
 
-            self.pub_rawtargetatt = rospy.Publisher('/uav1/mavros/setpoint_raw/attitude', AttitudeTarget, queue_size=100)
-            # self.pub_att = rospy.Publisher('/mavros/setpoint_attitude/attitude', PoseStamped, queue_size=100)
-            # self.pub_att2 = rospy.Publisher('/mavros/setpoint_attitude/target_attitude', PoseStamped, queue_size=100)
-            # self.pub_thr = rospy.Publisher('/mavros/setpoint_attitude/thrust', Thrust, queue_size=100)
-            rospy.Subscriber("/uav1/mavros/local_position/pose", PoseStamped, local_position_callback)
-            rospy.Subscriber("/uav1/mavros/state", State, uav_state_callback)
+        self.pub_rawtargetatt = rospy.Publisher('/mavros/setpoint_raw/attitude', AttitudeTarget, queue_size=100)
 
+        # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback)
+        # rospy.Subscriber("/uav1/mavros/global_position/local", PoseWithCovarianceStamped, local_position_callback)
+        # rospy.Subscriber("usb_cam/image_raw", Image, camera_callback)
+        # self.net = darknet.load_net("/home/lwc/darknet/cfg/yolo.cfg", "/home/lwc/darknet/yolo.weights", 0)
+        # self.meta = darknet.load_meta("/home/lwc/darknet/cfg/coco.data")
 
-            # rospy.Subscriber("/uav1/mavros/global_position/global", NavSatFix, local_position_callback)
-            # rospy.Subscriber("/uav1/mavros/global_position/local", PoseWithCovarianceStamped, local_position_callback)
-            # rospy.Subscriber("usb_cam/image_raw", Image, camera_callback)
-            # self.net = darknet.load_net("/home/lwc/darknet/cfg/yolo.cfg", "/home/lwc/darknet/yolo.weights", 0)
-            # self.meta = darknet.load_meta("/home/lwc/darknet/cfg/coco.data")
-
-
-            self.des_x = 0
-            self.des_y = 0
-            self.des_z = 0
+        self.des_x = 0
+        self.des_y = 0
+        self.des_z = 0
 
         self.roll_cmd     = 0
         self.pitch_cmd    = 0
         self.yaw_cmd      = 0
         self.throttle_cmd = 0
 
-        self.state = PoseStamped() # state of UAV : position related info
-        self.status = State() # status of UAV : flight status info (arm/disarm, mode, etc..)
+        self.mavmsg = cb()
 
 # define agent (global variable)
 agent1 = Data_storage(idx_uav=1)
@@ -109,11 +107,20 @@ class PX4_GUI(QtWidgets.QDialog):
         self.ui.show()
 
         self.srv_reset = rospy.ServiceProxy("/gazebo/set_model_state", SetModelState)
+        rospy.Subscriber("/mavros/local_position/pose", PoseStamped, agent1.mavmsg.local_position_callback)
+        rospy.Subscriber("/mavros/state", State, agent1.mavmsg.uav_state_callback)
+        rospy.Subscriber("/mavros/imu/data", Imu, agent1.mavmsg.imu_data_callback)
+        rospy.Subscriber("/mavros/imu/data_raw", Imu, agent1.mavmsg.imu_data_raw_callback)
+        rospy.Subscriber("/mavros/global_position/local", Odometry, agent1.mavmsg.gps_local_callback)
+        rospy.Subscriber("/mavros/global_position/raw/fix", NavSatFix, agent1.mavmsg.gps_rawnav_callback)
+        # rospy.Subscriber("/mavros/target_actuator_control", )
+        rospy.Subscriber("/mavros/target_actuator_control", ActuatorControl, agent1.mavmsg.ctrl_callback)
+
         rospy.Subscriber("/iris_cam/image_raw", Image, camera_callback)
 
         agent1.OT = Offboard_thread(idx_uav=1)
 
-        self.offboard_thread_chk = 2;
+        self.offboard_thread_chk = 2
 
         self.slider_roll_1 = self.horizontalSlider_roll_1
         self.slider_pitch_1 = self.verticalSlider_pitch_1
@@ -165,11 +172,11 @@ class PX4_GUI(QtWidgets.QDialog):
         self.text_des_y_1.setPlainText(str("{0:.2f}".format(agent1.des_y)))
         self.text_des_z_1.setPlainText(str("{0:.2f}".format(agent1.des_z)))
 
-        self.text_state_x_1.setPlainText(str("{0:.2f}".format(agent1.state.pose.position.x)))
-        self.text_state_y_1.setPlainText(str("{0:.2f}".format(agent1.state.pose.position.y)))
-        self.text_state_z_1.setPlainText(str("{0:.2f}".format(agent1.state.pose.position.z)))
+        self.text_state_x_1.setPlainText(str("{0:.2f}".format(agent1.mavmsg.state.pose.position.x)))
+        self.text_state_y_1.setPlainText(str("{0:.2f}".format(agent1.mavmsg.state.pose.position.y)))
+        self.text_state_z_1.setPlainText(str("{0:.2f}".format(agent1.mavmsg.state.pose.position.z)))
 
-        if agent1.status.connected == True:
+        if agent1.mavmsg.status.connected == True:
             self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("connected"))
             self.chkbox_FCU_CC.setCheckState(True)
             self.chkbox_FCU_CC.setText("connected")
@@ -178,11 +185,11 @@ class PX4_GUI(QtWidgets.QDialog):
             self.chkbox_FCU_CC.setCheckState(False)
             self.chkbox_FCU_CC.setText("disconnected")
 
-        if agent1.status.armed == True:
+        if agent1.mavmsg.status.armed == True:
             self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("armed"))
         else:
             self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("disarmed"))
-        self.tableWidget.setItem(2, 0, QtWidgets.QTableWidgetItem(agent1.status.mode))
+        self.tableWidget.setItem(2, 0, QtWidgets.QTableWidgetItem(agent1.mavmsg.status.mode))
 
         if self.offboard_thread_chk == 1:
             self.tableWidget.setItem(3, 0, QtWidgets.QTableWidgetItem("on"))
@@ -213,15 +220,11 @@ class PX4_GUI(QtWidgets.QDialog):
     def slot3(self): # click offboard radio button
         # !! should check there is periodic ctrl command
         check = agent1.mode(custom_mode = "OFFBOARD")
-        # if check.success == True:
-        #     self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("offboard"))
 
     @pyqtSlot()
     def slot4(self): # click stabilize radio button
         # check = self.mode(custom_mode="STABILIZED")
         agent1.mode(custom_mode='MANUAL')
-        # if check.success == True:
-        #     self.tableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem("stabilize"))
 
     @pyqtSlot() ##
     def slot5(self): # click offboard thread on
@@ -242,15 +245,11 @@ class PX4_GUI(QtWidgets.QDialog):
             agent1.OT = Offboard_thread(idx_uav=1)
             self.offboard_thread_chk = 2
 
-    # @pyqtSlot() ##
-    # def slot7(self):  # click offboard thread suspend
-    #     self.offboard_thread_chk = 3;
-    #     # agent1.OT.mySuspend()
-    #
-    # @pyqtSlot() ##
-    # def slot8(self):  # click offboard thread resume
-    #     self.offboard_thread_chk = 1;
-    #     # agent1.OT.myResume()
+    @pyqtSlot() ##
+    def slot7(self):  # set reference GPS
+        agent1.mavmsg.lat_ref = agent1.mavmsg.gps_raw.latitude
+        agent1.mavmsg.lon_ref = agent1.mavmsg.gps_raw.longitude
+        agent1.mavmsg.alt_ref = agent1.mavmsg.gps_raw.altitude
 
     @pyqtSlot()
     def slot13(self): # click offboard input as joystick
@@ -261,8 +260,8 @@ class PX4_GUI(QtWidgets.QDialog):
     def slot14(self): # click offboard input as autonomous
         self.tableWidget.setItem(4, 0, QtWidgets.QTableWidgetItem("auto"))
         self.ctrl_type = 'auto'
-        print(self.tableWidget.item(2,0).text())
-        print(self.tableWidget.item(2,0).text() == 'ff')
+        # print(self.tableWidget.item(2,0).text())
+        # print(self.tableWidget.item(2,0).text() == 'ff')
 
     @pyqtSlot()
     def slot15(self): # horizontal slider(desired pos (x))
@@ -418,12 +417,6 @@ class Offboard_thread(Thread):
                 if self.__suspend == True:
                     continue
 
-                # if self.tableWidget.item(2,0).text() == 'auto':
-                #     self.ctrl.calc_cmd_att_thr_auto()
-                # elif self.tableWidget.item(2,0).text() == 'joystick':
-
-                # self.ctrl.calc_cmd_att_thr_joy()
-
                 self.ctrl.calc_cmd_att_thr_auto(self.idx_uav)
                 self.ctrl.talk(self.idx_uav)
                 self.rate.sleep()
@@ -452,8 +445,6 @@ class setpoint_att(object):
         self.cmd_rawatt = AttitudeTarget()
 
         self.count = 1
-        # self.cmd_att.header.stamp.secs = rospy.get_time()
-        # self.cmd_att.header.seq = self.count
 
         self.roll = 0 # [-1, 1]
         self.pitch = 0 # [-1, 1]
@@ -507,10 +498,11 @@ class setpoint_att(object):
 
         self.cmd_att.header.stamp = rospy.Time.now()
 
-        q = quaternion_from_euler(self.roll,self.pitch,self.yaw)
+        q = quaternion_from_euler(self.roll, self.pitch, self.yaw)
         self.cmd_att.header.seq = self.count
         self.cmd_att.pose.orientation = Quaternion(*q)
         self.cmd_thr.thrust = self.throttle
+
 
         self.count += 1
 
@@ -549,7 +541,7 @@ class setpoint_att(object):
         state_phi_prev = self.state_phi
         state_theta_prev = self.state_theta
         state_psi_prev = self.state_psi
-        (self.state_phi, self.state_theta, self.state_psi) = euler_from_quaternion([agent.state.pose.orientation.x, agent.state.pose.orientation.y, agent.state.pose.orientation.z, agent.state.pose.orientation.w])
+        (self.state_phi, self.state_theta, self.state_psi) = euler_from_quaternion([agent.mavmsg.state.pose.orientation.x, agent.mavmsg.state.pose.orientation.y, agent.mavmsg.state.pose.orientation.z, agent.mavmsg.state.pose.orientation.w])
         state_vphi = (self.state_phi - state_phi_prev) / dt
         state_vtheta = (self.state_theta - state_theta_prev) / dt
         state_vpsi = (self.state_psi - state_psi_prev) / dt
@@ -558,9 +550,9 @@ class setpoint_att(object):
         state_y_prev = self.state_y
         state_z_prev = self.state_z
 
-        self.state_x = agent.state.pose.position.x
-        self.state_y = agent.state.pose.position.y
-        self.state_z = agent.state.pose.position.z
+        self.state_x = agent.mavmsg.state.pose.position.x
+        self.state_y = agent.mavmsg.state.pose.position.y
+        self.state_z = agent.mavmsg.state.pose.position.z
 
         state_vx = (self.state_x - state_x_prev) / dt
         state_vy = (self.state_y - state_y_prev) / dt
@@ -589,23 +581,24 @@ class setpoint_att(object):
 
         u1 = np.maximum(u1, 0)
         u1 = np.minimum(u1, 0.7)
-        u_phi = np.maximum(u_phi,-0.6)
-        u_phi = np.minimum(u_phi,0.6)
-        u_theta = np.maximum(u_theta,-0.6)
-        u_theta = np.minimum(u_theta,0.6)
-        u_psi = np.maximum(u_psi,-0.6)
-        u_psi = np.minimum(u_psi,0.6)
+        u_phi = np.maximum(u_phi, -0.6)
+        u_phi = np.minimum(u_phi, 0.6)
+        u_theta = np.maximum(u_theta, -0.6)
+        u_theta = np.minimum(u_theta, 0.6)
+        u_psi = np.maximum(u_psi, -0.6)
+        u_psi = np.minimum(u_psi, 0.6)
 
         q = quaternion_from_euler(u_phi,u_theta,u_psi)
-        # self.cmd_att.header.seq = self.count
+
         self.cmd_att.pose.orientation = Quaternion(*q)
         self.cmd_thr.thrust = u1
-
-
 
         self.cmd_rawatt.thrust = u1
         self.cmd_rawatt.orientation = Quaternion(*q)
 
+        # ctrl_info_talker(u_phi, u_theta, u_psi, u1)
+
+        # print("%f %f %f %f", u_phi, u_theta, u_psi, u1)
 
         if idx_uav == 1:
             agent1.roll_cmd = u_phi
@@ -618,13 +611,7 @@ class setpoint_att(object):
     def talk(self, idx_uav):
         self.cmd_att.pose.position.z = 10.0
         if idx_uav == 1:
-            # agent1.pub_att.publish(self.cmd_att)
-            # agent1.pub_thr.publish(self.cmd_thr)
-
-            print(self.cmd_rawatt)
             agent1.pub_rawtargetatt.publish(self.cmd_rawatt)
-
-
 
 if __name__ == '__main__':
     rospy.init_node('wc_TK1_node')
